@@ -6,37 +6,42 @@
 
 package cn.itjesse.helloworld;
 
+import static org.bukkit.Bukkit.getLogger;
+import static org.bukkit.Bukkit.getServer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
 /**
  *
  * @author Jesse
  */
-public final class helloworld extends JavaPlugin implements Listener {
-    @Override
-    public void onEnable() {
-        // TODO Insert logic to be performed when the plugin is enabled
-        //getLogger().info("HelloWorld is Enabled!");
-        this.getConfig().options().copyDefaults(true);
-        saveConfig();
-        reloadConfig();
-        getServer().getPluginManager().registerEvents(this, this);
+public class Helloworld extends BukkitRunnable {
+ 
+    private final JavaPlugin plugin;
+    private final PlayerJoinEvent event;
+    private final Player player;
+ 
+    public Helloworld(JavaPlugin plugin, PlayerJoinEvent event, Player player) {
+        this.plugin = plugin;
+        this.event = event;
+        this.player = player;
     }
-    
-    @EventHandler
-    public void onLogin(PlayerJoinEvent event) {
-        Player player = event.getPlayer(); // The player who joined
+ 
+    @Override
+    public void run() {
+        // What you want to schedule goes here
+        //Player player = event.getPlayer(); // The player who joined
         ItemStack item = player.getItemInHand();
         Material type = item.getType();
-        String name = this.getConfig().getString("item." + type, "空气");
+        getLogger().info(type.toString());
+        String name = plugin.getConfig().getString("item." + type, "空气");
         getServer().broadcastMessage(ChatColor.GREEN + player.getName() + "手拿"
                 + ChatColor.RED + name + ChatColor.GREEN + "闪亮登场！");
     }
+ 
 }
